@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile | Renewly</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="../css/profile.css" />
+  <link rel="stylesheet" href="../css/profile.css">
+  <link rel="stylesheet" href="../css/global.css">
   <link rel="shortcut icon" href="../images/favicon.png" type="image/x-icon">
-  <link rel="stylesheet" href="../css/global.css" />
 </head>
 <body>
   <!-- Animated background elements -->
@@ -24,309 +24,46 @@
         <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
         <li><a href="add-document.html"><i class="fas fa-file-upload"></i> Documents</a></li>
         <li><a href="profile.html" class="active"><i class="fas fa-user"></i> Profile</a></li>
+        <li><a href="#" id="logout-btn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
       </ul>
     </nav>
   </header>
 
   <!-- Main Content -->
-  <main class="profile-container">
-    <!-- Profile Header -->
-    <section class="profile-header">
-      <div class="profile-cover">
-        <button class="edit-cover-btn" id="editCoverBtn">
-          <i class="fas fa-camera"></i>
-        </button>
-      </div>
-      
-      <div class="profile-info">
-        <div class="profile-avatar">
-          <img src="https://ui-avatars.com/api/?name=Uday+Kumar&background=ff66c4&color=fff&size=150" alt="Uday Kumar" id="profileAvatar">
-          <button class="edit-avatar-btn" id="editAvatarBtn">
-            <i class="fas fa-camera"></i>
-          </button>
+  <main class="dashboard-container">
+    <section class="profile-box">
+      <h1><i class="fas fa-user-circle"></i> Your Profile</h1>
+      <div class="profile-content">
+        <h2>Personal Information</h2>
+        <p id="empty-profile-message" class="empty-message" style="display: none;">Please fill in your details to view your profile.</p>
+        <div id="profile-view" style="display: none;">
+          <p><strong>Full Name:</strong> <span id="fullName"></span></p>
+          <p><strong>Email:</strong> <span id="email"></span></p>
+          <p><strong>Phone:</strong> <span id="phone"></span></p>
+          <button id="edit-profile-btn" class="edit-btn"><i class="fas fa-edit"></i> Edit Profile</button>
         </div>
-        
-        <div class="profile-details">
-          <h1 id="profileName">Uday Kumar</h1>
-          <p class="username">@udaykumar</p>
-          <p class="joined-date"><i class="fas fa-calendar-alt"></i> Joined: June 2025</p>
-        </div>
-        
-        <button class="edit-profile-btn" id="editProfileBtn">
-          <i class="fas fa-edit"></i> Edit Profile
-        </button>
+        <form id="profile-form">
+          <div class="form-group">
+            <label for="fullNameInput"><i class="fas fa-user"></i> Full Name</label>
+            <input type="text" id="fullNameInput" name="fullName" placeholder="Enter your full name" required>
+          </div>
+          <div class="form-group">
+            <label for="emailInput"><i class="fas fa-envelope"></i> Email</label>
+            <input type="email" id="emailInput" name="email" placeholder="Enter your email (optional)">
+          </div>
+          <div class="form-group">
+            <label for="phoneInput"><i class="fas fa-phone"></i> Phone</label>
+            <input type="tel" id="phoneInput" name="phone" placeholder="Enter your phone number" required>
+          </div>
+          <div class="form-actions">
+            <button type="submit"><i class="fas fa-save"></i> Save</button>
+            <button type="button" id="cancel-edit-btn"><i class="fas fa-times"></i> Cancel</button>
+          </div>
+        </form>
       </div>
     </section>
-    
-    <!-- Profile Content -->
-    <div class="profile-content">
-      <!-- Personal Information -->
-      <section class="profile-card">
-        <div class="card-header">
-          <h2><i class="fas fa-user-circle"></i> Personal Information</h2>
-          <button class="section-edit-btn" data-section="personal">
-            <i class="fas fa-edit"></i>
-          </button>
-        </div>
-        
-        <div class="card-body">
-          <!-- View Mode -->
-          <div class="view-mode" id="personalInfoView">
-            <div class="info-row">
-              <div class="info-label">Full Name</div>
-              <div class="info-value" id="fullNameValue">Uday Kumar</div>
-            </div>
-            
-            <div class="info-row">
-              <div class="info-label">Email</div>
-              <div class="info-value" id="emailValue">uday.kumar@example.com</div>
-            </div>
-            
-            <div class="info-row">
-              <div class="info-label">Phone</div>
-              <div class="info-value" id="phoneValue">+91 98765 43210</div>
-            </div>
-            
-            <div class="info-row">
-              <div class="info-label">Location</div>
-              <div class="info-value" id="locationValue">Bangalore, India</div>
-            </div>
-          </div>
-          
-          <!-- Edit Mode -->
-          <div class="edit-mode" id="personalInfoEdit" style="display: none;">
-            <form id="personalInfoForm">
-              <div class="form-group">
-                <label for="fullName">Full Name</label>
-                <input type="text" id="fullName" value="Uday Kumar">
-              </div>
-              
-              <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" value="uday.kumar@example.com">
-              </div>
-              
-              <div class="form-group">
-                <label for="phone">Phone</label>
-                <input type="tel" id="phone" value="+91 98765 43210">
-              </div>
-              
-              <div class="form-group">
-                <label for="location">Location</label>
-                <input type="text" id="location" value="Bangalore, India">
-              </div>
-              
-              <div class="form-actions">
-                <button type="button" class="cancel-btn" data-section="personal">Cancel</button>
-                <button type="submit" class="save-btn">Save Changes</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </section>
-      
-      <!-- Notification Preferences -->
-      <section class="profile-card">
-        <div class="card-header">
-          <h2><i class="fas fa-bell"></i> Notification Preferences</h2>
-          <button class="section-edit-btn" data-section="notifications">
-            <i class="fas fa-edit"></i>
-          </button>
-        </div>
-        
-        <div class="card-body">
-          <!-- View Mode -->
-          <div class="view-mode" id="notificationsView">
-            <div class="info-row">
-              <div class="info-label">Email Notifications</div>
-              <div class="info-value" id="emailNotifValue">Enabled</div>
-            </div>
-            
-            <div class="info-row">
-              <div class="info-label">SMS Notifications</div>
-              <div class="info-value" id="smsNotifValue">Enabled</div>
-            </div>
-            
-            <div class="info-row">
-              <div class="info-label">Notification Timing</div>
-              <div class="info-value" id="notifTimingValue">7 days before expiry</div>
-            </div>
-          </div>
-          
-          <!-- Edit Mode -->
-          <div class="edit-mode" id="notificationsEdit" style="display: none;">
-            <form id="notificationsForm">
-              <div class="form-group toggle-group">
-                <label for="emailNotif">Email Notifications</label>
-                <div class="toggle-switch">
-                  <input type="checkbox" id="emailNotif" checked>
-                  <label for="emailNotif"></label>
-                </div>
-              </div>
-              
-              <div class="form-group toggle-group">
-                <label for="smsNotif">SMS Notifications</label>
-                <div class="toggle-switch">
-                  <input type="checkbox" id="smsNotif" checked>
-                  <label for="smsNotif"></label>
-                </div>
-              </div>
-              
-              <div class="form-group">
-                <label for="notifTiming">Notification Timing</label>
-                <select id="notifTiming">
-                  <option value="1">1 day before expiry</option>
-                  <option value="3">3 days before expiry</option>
-                  <option value="7" selected>7 days before expiry</option>
-                  <option value="14">14 days before expiry</option>
-                  <option value="30">30 days before expiry</option>
-                </select>
-              </div>
-              
-              <div class="form-actions">
-                <button type="button" class="cancel-btn" data-section="notifications">Cancel</button>
-                <button type="submit" class="save-btn">Save Changes</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </section>
-      
-      <!-- Account Security -->
-      <section class="profile-card">
-        <div class="card-header">
-          <h2><i class="fas fa-shield-alt"></i> Account Security</h2>
-          <button class="section-edit-btn" data-section="security">
-            <i class="fas fa-edit"></i>
-          </button>
-        </div>
-        
-        <div class="card-body">
-          <!-- View Mode -->
-          <div class="view-mode" id="securityView">
-            <div class="info-row">
-              <div class="info-label">Phone Number</div>
-              <div class="info-value" id="secPhoneValue">+91 98765 43210</div>
-            </div>
-            
-            <div class="info-row">
-              <div class="info-label">Two-Factor Authentication</div>
-              <div class="info-value" id="twoFactorValue">Disabled</div>
-            </div>
-            
-            <div class="info-row">
-              <div class="info-label">Last Login</div>
-              <div class="info-value">July 15, 2025</div>
-            </div>
-          </div>
-          
-          <!-- Edit Mode -->
-          <div class="edit-mode" id="securityEdit" style="display: none;">
-            <form id="securityForm">
-              <div class="form-group">
-                <label for="secPhone">Phone Number</label>
-                <input type="tel" id="secPhone" value="+91 98765 43210">
-                <div class="form-help">This phone number will be used for login and recovery</div>
-              </div>
-              
-              <div class="form-group toggle-group">
-                <label for="twoFactor">Two-Factor Authentication</label>
-                <div class="toggle-switch">
-                  <input type="checkbox" id="twoFactor">
-                  <label for="twoFactor"></label>
-                </div>
-              </div>
-              
-              <div class="form-actions">
-                <button type="button" class="cancel-btn" data-section="security">Cancel</button>
-                <button type="submit" class="save-btn">Save Changes</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </section>
-      
-      <!-- Danger Zone -->
-      <section class="profile-card danger-zone">
-        <div class="card-header">
-          <h2><i class="fas fa-exclamation-triangle"></i> Danger Zone</h2>
-        </div>
-        
-        <div class="card-body">
-          <p class="danger-text">Once you delete your account, there is no going back. Please be certain.</p>
-          <button class="delete-account-btn" id="deleteAccountBtn">
-            <i class="fas fa-trash-alt"></i> Delete Account
-          </button>
-        </div>
-      </section>
-    </div>
   </main>
 
-  <!-- Edit Profile Modal -->
-  <div class="modal" id="editProfileModal">
-    <div class="modal-content">
-      <button class="close-modal" id="closeProfileModal">
-        <i class="fas fa-times"></i>
-      </button>
-      
-      <h2>Edit Profile</h2>
-      <form id="editProfileForm">
-        <div class="form-group">
-          <label for="profileFullName">Display Name</label>
-          <input type="text" id="profileFullName" value="Uday Kumar">
-        </div>
-        
-        <div class="form-group">
-          <label for="profileUsername">Username</label>
-          <div class="input-prefix">
-            <span>@</span>
-            <input type="text" id="profileUsername" value="udaykumar">
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label for="profileBio">Bio</label>
-          <textarea id="profileBio" rows="4" placeholder="Tell us about yourself..."></textarea>
-        </div>
-        
-        <div class="form-actions">
-          <button type="button" class="cancel-btn" id="cancelProfileEdit">Cancel</button>
-          <button type="submit" class="save-btn">Save Changes</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Delete Account Confirmation Modal -->
-  <div class="modal" id="deleteAccountModal">
-    <div class="modal-content">
-      <button class="close-modal" id="closeDeleteModal">
-        <i class="fas fa-times"></i>
-      </button>
-      
-      <div class="delete-confirmation">
-        <i class="fas fa-exclamation-circle"></i>
-        <h2>Delete Account</h2>
-        <p>Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently removed.</p>
-        
-        <div class="form-group">
-          <label for="deleteConfirm">Type "DELETE" to confirm</label>
-          <input type="text" id="deleteConfirm" placeholder="DELETE">
-        </div>
-        
-        <div class="form-actions">
-          <button type="button" class="cancel-btn" id="cancelDelete">Cancel</button>
-          <button type="button" class="delete-btn" id="confirmDelete" disabled>Delete Account</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- File Inputs (hidden) -->
-  <input type="file" id="avatarInput" accept="image/*" style="display: none;">
-  <input type="file" id="coverInput" accept="image/*" style="display: none;">
-
-  <!-- Footer -->
   <!-- Footer -->
   <footer>
     <div class="footer-content">
@@ -334,7 +71,6 @@
         <div class="logo">Renewly</div>
         <p>Your personal document renewal assistant.</p>
       </div>
-      
       <div class="footer-links">
         <div class="link-group">
           <h3>Company</h3>
@@ -344,7 +80,6 @@
             <li><a href="#">Careers</a></li>
           </ul>
         </div>
-        
         <div class="link-group">
           <h3>Legal</h3>
           <ul>
@@ -353,7 +88,6 @@
             <li><a href="#">Cookie Policy</a></li>
           </ul>
         </div>
-        
         <div class="link-group">
           <h3>Connect</h3>
           <div class="social-icons">
@@ -365,220 +99,11 @@
         </div>
       </div>
     </div>
-    
     <div class="footer-bottom">
       <p>&copy; 2025 Renewly. All rights reserved. | <em>Because staying updated should be effortless.</em></p>
     </div>
   </footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Edit Section Toggle
-      const editSectionBtns = document.querySelectorAll('.section-edit-btn');
-      const cancelBtns = document.querySelectorAll('.cancel-btn');
-      
-      editSectionBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-          const section = this.dataset.section;
-          document.getElementById(`${section}View`).style.display = 'none';
-          document.getElementById(`${section}Edit`).style.display = 'block';
-        });
-      });
-      
-      cancelBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-          const section = this.dataset.section;
-          document.getElementById(`${section}Edit`).style.display = 'none';
-          document.getElementById(`${section}View`).style.display = 'block';
-        });
-      });
-      
-      // Form Submission Handlers
-      const forms = document.querySelectorAll('form');
-      forms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-          e.preventDefault();
-          
-          // Update view with form values
-          if (this.id === 'personalInfoForm') {
-            document.getElementById('fullNameValue').textContent = document.getElementById('fullName').value;
-            document.getElementById('emailValue').textContent = document.getElementById('email').value;
-            document.getElementById('phoneValue').textContent = document.getElementById('phone').value;
-            document.getElementById('locationValue').textContent = document.getElementById('location').value;
-            
-            // Toggle view
-            document.getElementById('personalInfoEdit').style.display = 'none';
-            document.getElementById('personalInfoView').style.display = 'block';
-          }
-          
-          if (this.id === 'notificationsForm') {
-            document.getElementById('emailNotifValue').textContent = document.getElementById('emailNotif').checked ? 'Enabled' : 'Disabled';
-            document.getElementById('smsNotifValue').textContent = document.getElementById('smsNotif').checked ? 'Enabled' : 'Disabled';
-            
-            const timing = document.getElementById('notifTiming');
-            const timingText = timing.options[timing.selectedIndex].text;
-            document.getElementById('notifTimingValue').textContent = timingText;
-            
-            // Toggle view
-            document.getElementById('notificationsEdit').style.display = 'none';
-            document.getElementById('notificationsView').style.display = 'block';
-          }
-          
-          if (this.id === 'securityForm') {
-            document.getElementById('secPhoneValue').textContent = document.getElementById('secPhone').value;
-            document.getElementById('twoFactorValue').textContent = document.getElementById('twoFactor').checked ? 'Enabled' : 'Disabled';
-            
-            // Toggle view
-            document.getElementById('securityEdit').style.display = 'none';
-            document.getElementById('securityView').style.display = 'block';
-          }
-          
-          if (this.id === 'editProfileForm') {
-            document.getElementById('profileName').textContent = document.getElementById('profileFullName').value;
-            document.querySelector('.username').textContent = '@' + document.getElementById('profileUsername').value;
-            
-            // Close modal
-            document.getElementById('editProfileModal').classList.remove('active');
-          }
-          
-          // Show success notification
-          showNotification('Changes saved successfully!');
-        });
-      });
-      
-      // Edit Profile Modal
-      const editProfileBtn = document.getElementById('editProfileBtn');
-      const editProfileModal = document.getElementById('editProfileModal');
-      const closeProfileModal = document.getElementById('closeProfileModal');
-      const cancelProfileEdit = document.getElementById('cancelProfileEdit');
-      
-      editProfileBtn.addEventListener('click', function() {
-        editProfileModal.classList.add('active');
-      });
-      
-      closeProfileModal.addEventListener('click', function() {
-        editProfileModal.classList.remove('active');
-      });
-      
-      cancelProfileEdit.addEventListener('click', function() {
-        editProfileModal.classList.remove('active');
-      });
-      
-      // Delete Account Modal
-      const deleteAccountBtn = document.getElementById('deleteAccountBtn');
-      const deleteAccountModal = document.getElementById('deleteAccountModal');
-      const closeDeleteModal = document.getElementById('closeDeleteModal');
-      const cancelDelete = document.getElementById('cancelDelete');
-      const deleteConfirm = document.getElementById('deleteConfirm');
-      const confirmDelete = document.getElementById('confirmDelete');
-      
-      deleteAccountBtn.addEventListener('click', function() {
-        deleteAccountModal.classList.add('active');
-      });
-      
-      closeDeleteModal.addEventListener('click', function() {
-        deleteAccountModal.classList.remove('active');
-        deleteConfirm.value = '';
-        confirmDelete.disabled = true;
-      });
-      
-      cancelDelete.addEventListener('click', function() {
-        deleteAccountModal.classList.remove('active');
-        deleteConfirm.value = '';
-        confirmDelete.disabled = true;
-      });
-      
-      deleteConfirm.addEventListener('input', function() {
-        confirmDelete.disabled = this.value !== 'DELETE';
-      });
-      
-      confirmDelete.addEventListener('click', function() {
-        if (deleteConfirm.value === 'DELETE') {
-          showNotification('Account deleted successfully');
-          setTimeout(() => {
-            window.location.href = 'login.html';
-          }, 2000);
-        }
-      });
-      
-      // Avatar and Cover Image Upload
-      const editAvatarBtn = document.getElementById('editAvatarBtn');
-      const editCoverBtn = document.getElementById('editCoverBtn');
-      const avatarInput = document.getElementById('avatarInput');
-      const coverInput = document.getElementById('coverInput');
-      const profileAvatar = document.getElementById('profileAvatar');
-      const profileCover = document.querySelector('.profile-cover');
-      
-      editAvatarBtn.addEventListener('click', function() {
-        avatarInput.click();
-      });
-      
-      editCoverBtn.addEventListener('click', function() {
-        coverInput.click();
-      });
-      
-      avatarInput.addEventListener('change', function() {
-        if (this.files && this.files[0]) {
-          const reader = new FileReader();
-          
-          reader.onload = function(e) {
-            profileAvatar.src = e.target.result;
-            showNotification('Profile picture updated successfully!');
-          };
-          
-          reader.readAsDataURL(this.files[0]);
-        }
-      });
-      
-      coverInput.addEventListener('change', function() {
-        if (this.files && this.files[0]) {
-          const reader = new FileReader();
-          
-          reader.onload = function(e) {
-            profileCover.style.backgroundImage = `url(${e.target.result})`;
-            showNotification('Cover photo updated successfully!');
-          };
-          
-          reader.readAsDataURL(this.files[0]);
-        }
-      });
-      
-      // Notification Function
-      function showNotification(message) {
-        const notification = document.createElement('div');
-        notification.className = 'notification';
-        notification.innerHTML = `
-          <i class="fas fa-check-circle"></i>
-          <span>${message}</span>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-          notification.classList.add('show');
-        }, 10);
-        
-        setTimeout(() => {
-          notification.classList.remove('show');
-          setTimeout(() => {
-            notification.remove();
-          }, 300);
-        }, 3000);
-      }
-      
-      // Close modals when clicking outside
-      window.addEventListener('click', function(e) {
-        if (e.target === editProfileModal) {
-          editProfileModal.classList.remove('active');
-        }
-        
-        if (e.target === deleteAccountModal) {
-          deleteAccountModal.classList.remove('active');
-          deleteConfirm.value = '';
-          confirmDelete.disabled = true;
-        }
-      });
-    });
-  </script>
+  <script src="../js/profile.js"></script>
 </body>
 </html>

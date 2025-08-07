@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | Renewly</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/login.css" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="shortcut icon" href="../images/favicon.png" type="image/x-icon">
+</head>
+<body>
+  <!-- Animated background elements -->
+  <div class="bg-circle circle-1"></div>
+  <div class="bg-circle circle-2"></div>
+  <div class="bg-circle circle-3"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">Renewly</div>
+    <!-- <nav>
+      <ul>
+        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="add-document.html"><i class="fas fa-file-upload"></i> Documents</a></li>
+        <li><a href="profile.html"><i class="fas fa-user"></i> Profile</a></li>
+      </ul>
+    </nav> -->
+  </header>
+
+  <!-- Login Section -->
+  <main class="login-container">
+    <section class="login-box">
+      <h1><i class="fas fa-lock"></i> Login to Renewly</h1>
+      <p>Enter your mobile number to receive an OTP</p>
+      <form id="mobile-form">
+        <div class="form-group">
+          <label for="mobile"><i class="fas fa-phone"></i> Mobile Number</label>
+          <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" maxlength="10" required />
+        </div>
+        <button type="submit" id="send-otp-btn"><i class="fas fa-paper-plane"></i> Send OTP</button>
+      </form>
+    </section>
+
+    <!-- OTP Modal -->
+    <div class="modal" id="otp-modal">
+      <div class="modal-content">
+        <button class="close-modal" id="close-modal"><i class="fas fa-times"></i></button>
+        <h1><i class="fas fa-key"></i> Verify OTP</h1>
+        <form id="otp-form">
+          <div class="form-group">
+            <label for="otp"><i class="fas fa-shield-alt"></i> Enter OTP</label>
+            <input type="text" id="otp" name="otp" placeholder="Enter 6-digit OTP" maxlength="6" required />
+          </div>
+          <button type="submit"><i class="fas fa-check-circle"></i> Verify OTP</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">
+        <div class="logo">Renewly</div>
+        <p>Your personal document renewal assistant.</p>
+      </div>
+      <div class="footer-links">
+        <div class="link-group">
+          <h3>Company</h3>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div class="link-group">
+          <h3>Legal</h3>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+          </ul>
+        </div>
+        <div class="link-group">
+          <h3>Connect</h3>
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Renewly. All rights reserved. | <em>Because staying updated should be effortless.</em></p>
+    </div>
+  </footer>
+
+  <script src="../js/login.js"></script>
+</body>
+</html>

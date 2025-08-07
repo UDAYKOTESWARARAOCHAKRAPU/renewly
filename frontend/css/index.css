@@ -748,3 +748,60 @@ footer {
     bottom: 20px;
   }
 }
+/* Existing index.css content */
+.dashboard-container {
+  margin: 120px auto 60px;
+  padding: 0 30px;
+  max-width: 1200px;
+  position: relative;
+}
+
+/* ... (all previous styles remain unchanged) ... */
+
+/* No Documents Message */
+.no-documents {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
+  padding: 20px;
+}
+
+/* Notification Styles */
+.notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 15px 25px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.notification.success i {
+  color: #7873f5;
+}
+
+.notification.error {
+  background: rgba(231, 56, 39, 0.2);
+  border: 1px solid rgba(231, 56, 39, 0.3);
+}
+
+.notification.error i {
+  color: #ff6b6b;
+}
