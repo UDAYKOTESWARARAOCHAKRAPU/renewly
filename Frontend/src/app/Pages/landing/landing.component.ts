@@ -7,5 +7,4 @@ import { Component } from '@angular/core';
   styleUrl: './landing.component.css'
 })
 export class LandingComponent {
-
 }

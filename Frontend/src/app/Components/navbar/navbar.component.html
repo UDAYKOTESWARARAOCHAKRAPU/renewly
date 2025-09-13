@@ -1,1 +1,39 @@
-<p>navbar works!</p>
+<header>
+  <div class="logo">Renewly</div>
+  <nav>
+    <ul>
+      <!-- Show this only when NOT on the landing page -->
+      <ng-container *ngIf="!isLanding">
+        <li>
+          <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-home"></i> Home
+          </a>
+        </li>
+        <li>
+          <a routerLink="/add-document" routerLinkActive="active">
+            <i class="fas fa-file-upload"></i> Documents
+          </a>
+        </li>
+        <li>
+          <a routerLink="/profile" routerLinkActive="active">
+            <i class="fas fa-user"></i> Profile
+          </a>
+        </li>
+        <li>
+          <a href="#" id="logout-btn" class="logout-btn" (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
+        </li>
+      </ng-container>
+
+      <!-- Show this only on the landing page -->
+      <ng-container *ngIf="isLanding">
+        <li>
+          <a routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </a>
+        </li>
+      </ng-container>
+    </ul>
+  </nav>
+</header>

@@ -1,1 +1,29 @@
-<p>login works!</p>
+<!-- Login Section -->
+<main class="login-container">
+  <section class="login-box">
+    <h1><i class="fas fa-lock"></i> Login to Renewly</h1>
+    <p>Enter your mobile number to receive an OTP</p>
+    <form (submit)="sendOtp(); $event.preventDefault()">
+      <div class="form-group">
+        <label for="mobile"><i class="fas fa-phone"></i> Mobile Number</label>
+        <input type="tel" id="mobile" name="mobile" [(ngModel)]="mobile" placeholder="Enter your mobile number" maxlength="10" required />
+      </div>
+      <button type="submit" id="send-otp-btn"><i class="fas fa-paper-plane"></i> Send OTP</button>
+    </form>
+  </section>
+
+  <!-- OTP Modal -->
+  <div class="modal" id="otp-modal">
+    <div class="modal-content">
+      <button class="close-modal" id="close-modal" (click)="closeModal()"><i class="fas fa-times"></i></button>
+      <h1><i class="fas fa-key"></i> Verify OTP</h1>
+      <form (submit)="verifyOtp(); $event.preventDefault()">
+        <div class="form-group">
+          <label for="otp"><i class="fas fa-shield-alt"></i> Enter OTP</label>
+          <input type="text" id="otp" name="otp" [(ngModel)]="otp" placeholder="Enter 6-digit OTP" maxlength="6" required />
+        </div>
+        <button type="submit"><i class="fas fa-check-circle"></i> Verify OTP</button>
+      </form>
+    </div>
+  </div>
+</main>

@@ -1,1 +1,84 @@
-<p>add-document works!</p>
+<div class="main-add">
+  <section class="card-section">
+    <div class="section-header">
+      <h2>My Documents</h2>
+      <button class="add-doc-btn" (click)="openModal()">
+        <i class="fas fa-plus-circle"></i> Add New Document
+      </button>
+    </div>
+    <div class="card-grid" id="card-grid">
+      <div *ngFor="let doc of documents; let i = index" class="doc-card"
+        style="opacity: 1; transform: translateY(0); transition: opacity 0.5s ease, transform 0.5s ease;">
+        <h3>
+          <i class="fas fa-{{ getIconClass(doc.type) }}"></i> {{ doc.name }}
+        </h3>
+        <p>Type: {{ doc.type }}</p>
+        <p>Expires: {{ doc.expiry | dateFormat }}</p>
+        <div class="actions">
+          <button class="btn view-btn" (click)="openViewModal(doc.fileData)">
+            <i class="fas fa-eye"></i> View
+          </button>
+
+          <button class="btn delete-btn" (click)="deleteDocument(i)">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+      </div>
+      <p *ngIf="documents.length === 0">No documents added yet.</p>
+    </div>
+  </section>
+</div>
+<!-- View Document Modal -->
+<div class="modal" [class.active]="isViewModalOpen">
+  <div class="modal-content view-modal">
+    <button class="close-modal" (click)="closeViewModal()">
+      <i class="fas fa-times"></i>
+    </button>
+    <h1><i class="fas fa-image"></i> Document Preview</h1>
+    <div class="image-container" *ngIf="viewImageData">
+      <img [src]="viewImageData" alt="Document Preview" />
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" [class.active]="isModalOpen">
+  <div class="modal-content">
+    <button class="close-modal" (click)="closeModal()">
+      <i class="fas fa-times"></i>
+    </button>
+    <h1><i class="fas fa-file-plus"></i> Add New Document</h1>
+    <form id="add-doc-form" class="add-form" (submit)="addDocument($event)">
+      <div class="form-group">
+        <label for="docName"><i class="fas fa-file-signature"></i> Document
+          Name</label>
+        <input type="text" id="docName" name="docName"
+          placeholder="Enter document name" required />
+      </div>
+      <div class="form-group">
+        <label for="docType"><i class="fas fa-tag"></i> Document Type</label>
+        <select id="docType" name="docType" required>
+          <option value>Select a type</option>
+          <option value="ID">ID Proof</option>
+          <option value="License">License</option>
+          <option value="Passport">Passport</option>
+          <option value="Certificate">Certificate</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="expiry"><i class="fas fa-calendar-alt"></i> Expiry
+          Date</label>
+        <input type="date" id="expiry" name="expiry" required />
+      </div>
+      <div class="form-group">
+        <label for="docFile"><i class="fas fa-upload"></i> Upload
+          Document</label>
+        <input type="file" id="docFile" name="docFile"
+          accept="image/*,application/pdf" required />
+      </div>
+      <button type="submit"><i class="fas fa-plus-circle"></i> Add
+        Document</button>
+    </form>
+  </div>
+</div>
