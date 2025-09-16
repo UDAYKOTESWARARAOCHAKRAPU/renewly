@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
   fullName = '';
@@ -15,21 +15,20 @@ export class ProfileComponent implements OnInit {
   phone = '';
   editing = false;
 
-  ngOnInit() {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-    if (userInfo && userInfo.mobile) {
-      this.phone = userInfo.mobile;
-      this.fullName = userInfo.fullName || '';
-      this.email = userInfo.email || '';
-    }
-    this.editing = !this.fullName; // Show form if fullName is empty
-  }
+ngOnInit() {
+  const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+  this.fullName = userInfo.fullName || '';
+  this.email = userInfo.email || '';
+  this.phone = localStorage.getItem('mobile') || '';   // Access 'mobile' directly
+  this.editing = !this.fullName; // Show form if fullName is empty
+}
+
 
   saveProfile() {
     const userInfo = {
       fullName: this.fullName,
       email: this.email,
-      mobile: this.phone
+      mobile: this.phone,
     };
     localStorage.setItem('userInfo', JSON.stringify(userInfo));
     this.editing = false;

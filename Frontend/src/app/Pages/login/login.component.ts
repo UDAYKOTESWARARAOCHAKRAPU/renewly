@@ -23,7 +23,7 @@ export class LoginComponent {
     }
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     localStorage.setItem('otp', otp);
-    localStorage.setItem('mobile', this.mobile);
+    localStorage.setItem('mobile', this.mobile);  // Keep storing mobile for later use
     console.log('Generated OTP:', otp); // For testing only, remove in production
     alert('OTP sent to ' + this.mobile);
     this.openModal();
@@ -45,20 +45,29 @@ export class LoginComponent {
     }
   }
 
-  verifyOtp() {
-    const storedOtp = localStorage.getItem('otp');
-    if (!/^\d{6}$/.test(this.otp)) {
-      alert('Please enter a valid 6-digit OTP.');
-      return;
-    }
-    if (this.otp === storedOtp) {
-      // OTP verified, clear it and redirect
-      localStorage.removeItem('otp');
-      localStorage.removeItem('mobile');
-      alert('Login successful!');
-      this.router.navigate(['/home']);
-    } else {
-      alert('Invalid OTP. Please try again.');
-    }
+verifyOtp() {
+  const storedOtp = localStorage.getItem('otp');
+  if (!/^\d{6}$/.test(this.otp)) {
+    alert('Please enter a valid 6-digit OTP.');
+    return;
   }
+  if (this.otp === storedOtp) {
+    // OTP verified, clear only the OTP
+    localStorage.removeItem('otp');
+
+    // Store mobile in userInfo object
+    const userInfo = {
+      mobile: this.mobile,
+      fullName: '',   // empty initially
+      email: ''       // empty initially
+    };
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+    alert('Login successful!');
+    this.router.navigate(['/home']);
+  } else {
+    alert('Invalid OTP. Please try again.');
+  }
+}
+
 }
