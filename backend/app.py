@@ -3,6 +3,7 @@ from flasgger import Swagger
 from flask_jwt_extended import JWTManager
 from config import Config
 from routes.auth_routes import auth_bp
+from routes.profile_routes import profile_bp   # ✅ import profile routes
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -16,6 +17,7 @@ swagger = Swagger(app)
 
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix="/api/auth")
+app.register_blueprint(profile_bp, url_prefix="/api/profile")  # ✅ register profile routes
 
 @app.route("/api/health", methods=["GET"])
 def health():
