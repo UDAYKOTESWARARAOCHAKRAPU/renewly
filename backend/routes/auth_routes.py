@@ -1,11 +1,13 @@
 from flask import Blueprint, request, jsonify
-import random
 from flask_jwt_extended import create_access_token
+from models import db, User
+from datetime import datetime, timedelta
+import random
 
 auth_bp = Blueprint("auth", __name__)
 
-# In-memory OTP store
-OTP_STORE = {}
+# Temporary storage for OTPs (use Redis in production)
+otp_store = {}
 
 @auth_bp.route("/send-otp", methods=["POST"])
 def send_otp():
@@ -15,72 +17,78 @@ def send_otp():
     tags:
       - Auth
     parameters:
-      - name: body
-        in: body
+      - in: body
+        name: body
         required: true
         schema:
           type: object
           properties:
-            phone:
+            phone_number:
               type: string
               example: "7729931224"
     responses:
       200:
-        description: OTP sent successfully
-        examples:
-          application/json: {
-            "message": "OTP sent successfully",
-            "otp": "123456"
-          }
+        description: OTP sent
     """
-    data = request.get_json()
-    phone = data.get("phone")
+    data = request.json
+    phone_number = data.get("phone_number")
 
-    if not phone:
-        return jsonify({"error": "Phone number is required"}), 400
+    if not phone_number:
+        return jsonify({"msg": "Phone number is required"}), 400
 
+    # Check if user exists
+    user = User.query.filter_by(MobileNumber=phone_number).first()
+    if not user:
+        user = User(MobileNumber=phone_number, IsVerified=False, CreatedAt=datetime.now())
+        db.session.add(user)
+        db.session.commit()
+
+    # Generate OTP
     otp = str(random.randint(100000, 999999))
-    OTP_STORE[phone] = otp
+    otp_store[phone_number] = otp
 
-    # ⚠️ In production, integrate Twilio or other SMS API here
-    return jsonify({"message": "OTP sent successfully", "otp": otp}), 200
+    # TODO: Integrate SMS API here
+    print(f"DEBUG: OTP for {phone_number} is {otp}")
+
+    return jsonify({"msg": f"OTP sent to {phone_number}"}), 200
 
 
 @auth_bp.route("/verify-otp", methods=["POST"])
 def verify_otp():
     """
-    Verify OTP
+    Verify OTP and generate JWT token
     ---
     tags:
       - Auth
     parameters:
-      - name: body
-        in: body
+      - in: body
+        name: body
         required: true
         schema:
           type: object
           properties:
-            phone:
+            phone_number:
               type: string
-              example: "7729931224"
             otp:
               type: string
-              example: "123456"
     responses:
       200:
-        description: OTP verified successfully
-        examples:
-          application/json: {
-            "message": "OTP verified",
-            "access_token": "jwt-token-here"
-          }
+        description: JWT token
     """
-    data = request.get_json()
-    phone = data.get("phone")
+    data = request.json
+    phone_number = data.get("phone_number")
     otp = data.get("otp")
 
-    if OTP_STORE.get(phone) == otp:
-        access_token = create_access_token(identity=phone)
-        return jsonify({"message": "OTP verified", "access_token": access_token}), 200
+    if otp_store.get(phone_number) != otp:
+        return jsonify({"msg": "Invalid OTP"}), 400
 
-    return jsonify({"error": "Invalid OTP"}), 400
+    # Mark user as verified
+    user = User.query.filter_by(MobileNumber=phone_number).first()
+    if user:
+        user.IsVerified = True
+        db.session.commit()
+
+    # Create JWT with UserID
+    access_token = create_access_token(identity=user.UserID, expires_delta=timedelta(days=1))
+
+    return jsonify({"access_token": access_token}), 200

@@ -5,3 +5,5 @@ flask-cors
 flasgger
 twilio
 flask-jwt-extended
+pyodbc
+python-dotenv

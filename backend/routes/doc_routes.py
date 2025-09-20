@@ -1,170 +1,151 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flasgger.utils import swag_from
+from models import db, Document
 from datetime import datetime
-import uuid
 
-doc_bp = Blueprint("documents", __name__)
+document_bp = Blueprint("documents", __name__)
 
-# In-memory document storage
-documents = {}
-
-def calculate_status(expiry_date):
-    """Return 'valid' or 'expired' based on expiry_date (dd-mm-yyyy)."""
-    try:
-        exp_date = datetime.strptime(expiry_date, "%d-%m-%Y")
-        return "expired" if exp_date < datetime.now() else "valid"
-    except Exception:
-        return "unknown"
-
-
-@doc_bp.route("/documents", methods=["POST"])
-@jwt_required()
-def add_document():
-    """
-    Add a new document
-    ---
-    tags:
-      - Documents
-    security:
-      - BearerAuth: []
-    consumes:
-      - application/json
-    parameters:
-      - in: body
-        name: body
-        required: true
-        schema:
-          type: object
-          required:
-            - title
-            - expiry_date
-          properties:
-            title:
-              type: string
-              example: "Passport"
-            expiry_date:
-              type: string
-              example: "18-09-2030"
-            file_url:
-              type: string
-              example: "/uploads/passport.pdf"
-    responses:
-      201:
-        description: Document added successfully
-    """
-    phone_number = get_jwt_identity()
-    data = request.json
-
-    if not data.get("title") or not data.get("expiry_date"):
-        return jsonify({"msg": "Title and expiry_date are required"}), 400
-
-    doc_id = str(uuid.uuid4())
-    status = calculate_status(data["expiry_date"])
-
-    document = {
-        "id": doc_id,
-        "title": data["title"],
-        "expiry_date": data["expiry_date"],
-        "file_url": data.get("file_url"),
-        "status": status,
-        "phone_number": phone_number
+# ------------------ Add Document ------------------
+@document_bp.route("/", methods=["POST"])
+@swag_from({
+    "tags": ["Documents"],
+    "description": "Add a new document for a user",
+    "parameters": [
+        {
+            "name": "body",
+            "in": "body",
+            "required": True,
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "UserID": {"type": "integer", "example": 1},
+                    "Title": {"type": "string", "example": "Driving License"},
+                    "DocType": {"type": "string", "example": "License"},
+                    "ExpiryDate": {"type": "string", "example": "2025-12-31"},
+                    "Notes": {"type": "string", "example": "Renew before expiry"},
+                    "FilePath": {"type": "string", "example": "/uploads/license.pdf"}
+                },
+                "required": ["UserID", "Title", "DocType", "ExpiryDate"]
+            }
+        }
+    ],
+    "responses": {
+        201: {"description": "Document created successfully"},
+        400: {"description": "Invalid input"}
     }
+})
+def add_document():
+    data = request.json
+    new_doc = Document(
+        UserID=data["UserID"],
+        Title=data["Title"],
+        DocType=data["DocType"],
+        ExpiryDate=datetime.strptime(data["ExpiryDate"], "%Y-%m-%d"),
+        Notes=data.get("Notes"),
+        FilePath=data.get("FilePath")
+    )
+    db.session.add(new_doc)
+    db.session.commit()
 
-    documents.setdefault(phone_number, []).append(document)
-
-    return jsonify(document), 201
-
-
-@doc_bp.route("/documents", methods=["GET"])
-@jwt_required()
-def get_documents():
-    """
-    Get all documents for the logged-in user
-    ---
-    tags:
-      - Documents
-    security:
-      - BearerAuth: []
-    responses:
-      200:
-        description: List of documents
-    """
-    phone_number = get_jwt_identity()
-    return jsonify(documents.get(phone_number, [])), 200
+    return jsonify({"message": "Document added successfully", "DocumentID": new_doc.DocumentID}), 201
 
 
-@doc_bp.route("/documents/<doc_id>", methods=["PUT"])
-@jwt_required()
+# ------------------ Get Document ------------------
+@document_bp.route("/<int:doc_id>", methods=["GET"])
+@swag_from({
+    "tags": ["Documents"],
+    "description": "Get document details by ID",
+    "parameters": [
+        {"name": "doc_id", "in": "path", "type": "integer", "required": True, "description": "Document ID"}
+    ],
+    "responses": {
+        200: {"description": "Document found"},
+        404: {"description": "Document not found"}
+    }
+})
+def get_document(doc_id):
+    doc = Document.query.get(doc_id)
+    if not doc:
+        return jsonify({"error": "Document not found"}), 404
+
+    return jsonify({
+        "DocumentID": doc.DocumentID,
+        "Title": doc.Title,
+        "DocType": doc.DocType,
+        "ExpiryDate": doc.ExpiryDate.isoformat(),
+        "Notes": doc.Notes,
+        "FilePath": doc.FilePath,
+        "CreatedAt": doc.CreatedAt
+    }), 200
+
+
+# ------------------ Update Document ------------------
+@document_bp.route("/<int:doc_id>", methods=["PUT"])
+@swag_from({
+    "tags": ["Documents"],
+    "description": "Update an existing document by ID",
+    "parameters": [
+        {"name": "doc_id", "in": "path", "type": "integer", "required": True, "description": "Document ID"},
+        {
+            "name": "body",
+            "in": "body",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "Title": {"type": "string", "example": "Updated License"},
+                    "DocType": {"type": "string", "example": "ID"},
+                    "ExpiryDate": {"type": "string", "example": "2026-01-15"},
+                    "Notes": {"type": "string", "example": "Keep safe"},
+                    "FilePath": {"type": "string", "example": "/uploads/updated_license.pdf"}
+                }
+            }
+        }
+    ],
+    "responses": {
+        200: {"description": "Document updated successfully"},
+        404: {"description": "Document not found"}
+    }
+})
 def update_document(doc_id):
-    """
-    Update a document by ID
-    ---
-    tags:
-      - Documents
-    security:
-      - BearerAuth: []
-    consumes:
-      - application/json
-    parameters:
-      - in: path
-        name: doc_id
-        type: string
-        required: true
-      - in: body
-        name: body
-        schema:
-          type: object
-          properties:
-            title:
-              type: string
-            expiry_date:
-              type: string
-            file_url:
-              type: string
-    responses:
-      200:
-        description: Document updated
-    """
-    phone_number = get_jwt_identity()
-    user_docs = documents.get(phone_number, [])
+    data = request.json
+    doc = Document.query.get(doc_id)
 
-    for doc in user_docs:
-        if doc["id"] == doc_id:
-            data = request.json
-            doc["title"] = data.get("title", doc["title"])
-            doc["expiry_date"] = data.get("expiry_date", doc["expiry_date"])
-            doc["file_url"] = data.get("file_url", doc.get("file_url"))
-            doc["status"] = calculate_status(doc["expiry_date"])
-            return jsonify(doc), 200
+    if not doc:
+        return jsonify({"error": "Document not found"}), 404
 
-    return jsonify({"msg": "Document not found"}), 404
+    if "Title" in data:
+        doc.Title = data["Title"]
+    if "DocType" in data:
+        doc.DocType = data["DocType"]
+    if "ExpiryDate" in data:
+        doc.ExpiryDate = datetime.strptime(data["ExpiryDate"], "%Y-%m-%d")
+    if "Notes" in data:
+        doc.Notes = data["Notes"]
+    if "FilePath" in data:
+        doc.FilePath = data["FilePath"]
+
+    db.session.commit()
+    return jsonify({"message": "Document updated successfully"}), 200
 
 
-@doc_bp.route("/documents/<doc_id>", methods=["DELETE"])
-@jwt_required()
+# ------------------ Delete Document ------------------
+@document_bp.route("/<int:doc_id>", methods=["DELETE"])
+@swag_from({
+    "tags": ["Documents"],
+    "description": "Delete a document by ID",
+    "parameters": [
+        {"name": "doc_id", "in": "path", "type": "integer", "required": True, "description": "Document ID"}
+    ],
+    "responses": {
+        200: {"description": "Document deleted successfully"},
+        404: {"description": "Document not found"}
+    }
+})
 def delete_document(doc_id):
-    """
-    Delete a document by ID
-    ---
-    tags:
-      - Documents
-    security:
-      - BearerAuth: []
-    parameters:
-      - in: path
-        name: doc_id
-        type: string
-        required: true
-    responses:
-      200:
-        description: Document deleted
-    """
-    phone_number = get_jwt_identity()
-    user_docs = documents.get(phone_number, [])
+    doc = Document.query.get(doc_id)
+    if not doc:
+        return jsonify({"error": "Document not found"}), 404
 
-    for doc in user_docs:
-        if doc["id"] == doc_id:
-            user_docs.remove(doc)
-            return jsonify({"msg": "Document deleted"}), 200
-
-    return jsonify({"msg": "Document not found"}), 404
+    db.session.delete(doc)
+    db.session.commit()
+    return jsonify({"message": "Document deleted successfully"}), 200
