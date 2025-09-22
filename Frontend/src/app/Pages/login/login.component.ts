@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';  // For navigation
+import  api  from '../../../api'; // Import the api instance
 
 @Component({
   selector: 'app-login',
@@ -16,15 +17,19 @@ export class LoginComponent {
 
   constructor(private router: Router) {}
 
-  sendOtp() {
+  async sendOtp() {
     if (!/^\d{10}$/.test(this.mobile)) {
       alert('Please enter a valid 10-digit mobile number.');
       return;
     }
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    localStorage.setItem('otp', otp);
-    localStorage.setItem('mobile', this.mobile);  // Keep storing mobile for later use
-    console.log('Generated OTP:', otp); // For testing only, remove in production
+    try {
+      const response = await api.post('/auth/send-otp', { phone_number: this.mobile });
+      console.log('OTP sent successfully:', response.data);
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+      alert('Failed to send OTP. Please try again.');
+      return;
+    }
     alert('OTP sent to ' + this.mobile);
     this.openModal();
   }
@@ -45,29 +50,24 @@ export class LoginComponent {
     }
   }
 
-verifyOtp() {
+async verifyOtp() {
   const storedOtp = localStorage.getItem('otp');
   if (!/^\d{6}$/.test(this.otp)) {
     alert('Please enter a valid 6-digit OTP.');
     return;
   }
-  if (this.otp === storedOtp) {
-    // OTP verified, clear only the OTP
-    localStorage.removeItem('otp');
-
-    // Store mobile in userInfo object
-    const userInfo = {
-      mobile: this.mobile,
-      fullName: '',   // empty initially
-      email: ''       // empty initially
-    };
-    localStorage.setItem('userInfo', JSON.stringify(userInfo));
-
-    alert('Login successful!');
-    this.router.navigate(['/home']);
-  } else {
-    alert('Invalid OTP. Please try again.');
+  try {
+    const response = await api.post('/auth/verify-otp', { phone_number: this.mobile, otp: this.otp });
+    if (response.status === 200) {
+      alert('Login successful!');
+      console.log(response)
+      localStorage.setItem('token', response.data.access_token); // Store JWT token
+      this.router.navigate(['/home']); // Navigate to dashboard
+      this.closeModal();
+    } 
+  }catch(err:any){
+    console.error('Error verifying OTP:', err);
+    alert(err.response.data);
   }
 }
-
 }

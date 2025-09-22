@@ -3,6 +3,7 @@ from flasgger import Swagger
 from flask_jwt_extended import JWTManager
 from config import Config
 from database import db   # Your SQLAlchemy db instance
+from flask_cors import CORS
 
 # Import blueprints
 from routes.auth_routes import auth_bp
@@ -14,6 +15,7 @@ from routes.home_routes import home_bp
 # Initialize Flask app
 app = Flask(__name__)
 app.config.from_object(Config)
+CORS(app)  # Enable CORS for all routes
 
 # Initialize DB
 db.init_app(app)

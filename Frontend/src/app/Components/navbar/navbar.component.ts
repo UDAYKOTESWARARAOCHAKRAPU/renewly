@@ -16,8 +16,9 @@ export class NavbarComponent {
     return this.router.url === '/' || this.router.url === '/login';
   }
 
-  logout() {
-    localStorage.clear();
-    this.router.navigate(['/login']);
-  }
+logout() {
+  localStorage.removeItem('token');
+  this.router.navigate(['/login']);
+}
+
 }
