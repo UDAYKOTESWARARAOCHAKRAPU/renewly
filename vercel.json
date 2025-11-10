@@ -8,7 +8,7 @@
     },
     {
       "source": "/(.*)",
-      "destination": "/Frontend/dist/frontend/browser/$1"
+      "destination": "/Frontend/dist/frontend/$1"
     }
   ],
   "functions": {
