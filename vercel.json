@@ -1,19 +1,15 @@
 {
+  "version": 2,
   "buildCommand": "cd Frontend && npm install && npm run build",
   "outputDirectory": "Frontend/dist/frontend/browser",
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/backend/app.py"
+      "destination": "http://localhost:5000/api/$1"
     },
     {
       "source": "/(.*)",
       "destination": "/Frontend/dist/frontend/browser/$1"
     }
-  ],
-  "functions": {
-    "backend/**/*.py": {
-      "runtime": "nodejs"
-    }
-  }
+  ]
 }
